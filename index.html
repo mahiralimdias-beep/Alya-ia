@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Alya IA</title>
 
     <style>
@@ -13,246 +15,276 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f3f4f6;
+            background: #f5f3ff;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app {
-            width: 100%;
-            max-width: 500px;
-            height: 100vh;
-            background: white;
             display: flex;
             flex-direction: column;
         }
 
-        .header {
-            background: #8b5cf6;
+        /* EN-TÊTE */
+
+        header {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
             color: white;
             padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
         }
 
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: white;
-            color: #8b5cf6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        header h1 {
+            margin: 0;
             font-size: 25px;
         }
 
-        .header h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .header p {
-            margin: 4px 0 0;
-            font-size: 13px;
+        header p {
+            margin: 5px 0 0;
+            font-size: 14px;
             opacity: 0.9;
         }
 
-        .messages {
+        /* ZONE DES MESSAGES */
+
+        #messages {
             flex: 1;
-            padding: 20px;
             overflow-y: auto;
+            padding: 20px;
         }
 
         .message {
             max-width: 80%;
-            padding: 12px 15px;
-            border-radius: 18px;
+            padding: 13px 16px;
             margin-bottom: 12px;
+            border-radius: 18px;
             line-height: 1.4;
-        }
-
-        .alya {
-            background: #eee9ff;
-            color: #222;
-            border-bottom-left-radius: 5px;
+            word-wrap: break-word;
         }
 
         .user {
-            background: #8b5cf6;
+            background: #7c3aed;
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 5px;
         }
 
+        .alya {
+            background: white;
+            color: #222;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* ZONE D'ÉCRITURE */
+
         .input-area {
-            display: flex;
+            background: white;
             padding: 12px;
-            border-top: 1px solid #ddd;
+            display: flex;
             gap: 8px;
+            border-top: 1px solid #ddd;
         }
 
-        input {
+        #messageInput {
             flex: 1;
-            padding: 13px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 25px;
+            padding: 13px 17px;
+            font-size: 16px;
             outline: none;
-            font-size: 15px;
         }
 
-        button {
-            width: 48px;
-            height: 48px;
+        #messageInput:focus {
+            border-color: #7c3aed;
+        }
+
+        #sendButton {
             border: none;
-            border-radius: 50%;
-            background: #8b5cf6;
+            background: #7c3aed;
             color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             font-size: 20px;
+            cursor: pointer;
+        }
+
+        #sendButton:active {
+            transform: scale(0.95);
+        }
+
+        .typing {
+            font-style: italic;
+            opacity: 0.7;
         }
     </style>
 </head>
 
 <body>
 
-<div class="app">
+    <!-- EN-TÊTE -->
 
-    <div class="header">
-        <div class="avatar">🤖</div>
+    <header>
+        <h1>🤖 Alya IA ❤️</h1>
+        <p>Ton assistante personnelle</p>
+    </header>
 
-        <div>
-            <h2>Alya IA</h2>
-            <p>En ligne • Ton assistante personnelle</p>
-        </div>
-    </div>
 
-    <div class="messages" id="messages">
+    <!-- MESSAGES -->
+
+    <div id="messages">
 
         <div class="message alya">
-            Salut 😄❤️ Je suis Alya !
-            <br><br>
-            Je suis là pour discuter avec toi, te motiver,
-            te faire rire et t'aider dans tes projets. 🤖✨
+            Coucou 😄❤️ ! Je suis Alya IA.
+            Comment puis-je t'aider aujourd'hui ?
         </div>
 
     </div>
+
+
+    <!-- ZONE D'ENVOI -->
 
     <div class="input-area">
 
         <input
             type="text"
             id="messageInput"
-            placeholder="Écris un message..."
+            placeholder="Écris un message à Alya..."
+            autocomplete="off"
         >
 
-        <button onclick="sendMessage()">➤</button>
+        <button id="sendButton" onclick="sendMessage()">
+            ➤
+        </button>
 
     </div>
 
-</div>
+
+    <script>
+
+        const messages = document.getElementById("messages");
+        const input = document.getElementById("messageInput");
 
 
-<script>
+        // Fonction pour envoyer un message
 
-function sendMessage() {
+        async function sendMessage() {
 
-    const input = document.getElementById("messageInput");
-    const messages = document.getElementById("messages");
+            const text = input.value.trim();
 
-    const text = input.value.trim();
-
-    if (text === "") {
-        return;
-    }
-
-    // Message de l'utilisateur
-    const userMessage = document.createElement("div");
-
-    userMessage.className = "message user";
-    userMessage.textContent = text;
-
-    messages.appendChild(userMessage);
-
-    input.value = "";
-
-    messages.scrollTop = messages.scrollHeight;
+            if (text === "") {
+                return;
+            }
 
 
-    // Réponse d'Alya
-    setTimeout(function() {
+            // Afficher le message de l'utilisateur
 
-        const alyaMessage = document.createElement("div");
+            const userMessage = document.createElement("div");
 
-        alyaMessage.className = "message alya";
+            userMessage.className = "message user";
 
-        let response;
+            userMessage.textContent = text;
 
-        const message = text.toLowerCase();
+            messages.appendChild(userMessage);
 
-        if (message.includes("bonjour") ||
-            message.includes("salut") ||
-            message.includes("coucou")) {
 
-            response =
-                "Coucou 😄❤️ ! Ça me fait plaisir de te voir. Comment vas-tu aujourd'hui ?";
+            // Vider la zone de texte
 
-        } 
-        else if (message.includes("triste") ||
-                 message.includes("découragé")) {
+            input.value = "";
 
-            response =
-                "Oh ❤️ viens, ne baisse pas les bras. On avance doucement, étape par étape. 💪😊";
 
-        } 
-        else if (message.includes("merci")) {
+            // Descendre automatiquement
 
-            response =
-                "Avec plaisir 😄❤️ ! Tu sais que tu peux toujours compter sur moi.";
+            messages.scrollTop = messages.scrollHeight;
 
-        } 
-        else if (message.includes("projet")) {
 
-            response =
-                "J'adore les projets 😎🔥 ! Explique-moi ton idée et on va essayer de la réaliser ensemble.";
+            // Afficher "Alya réfléchit..."
 
-        } 
-        else if (message.includes("amour")) {
+            const alyaMessage = document.createElement("div");
 
-            response =
-                "L'amour ❤️... vaste sujet ! 😄 Raconte-moi ce qui se passe.";
+            alyaMessage.className = "message alya typing";
 
-        } 
-        else {
+            alyaMessage.textContent = "Alya réfléchit... 🤔💭";
 
-            response =
-                "Hmm 🤔 raconte-moi un peu plus. Je t'écoute attentivement ❤️";
+            messages.appendChild(alyaMessage);
 
+            messages.scrollTop = messages.scrollHeight;
+
+
+            try {
+
+                // Connexion au serveur Render
+
+                const response = await fetch(
+                    "https://alya-ia.onrender.com/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message: text
+                        })
+                    }
+                );
+
+
+                const data = await response.json();
+
+
+                // Vérifier la réponse
+
+                if (data.answer) {
+
+                    alyaMessage.classList.remove("typing");
+
+                    alyaMessage.textContent = data.answer;
+
+                } else {
+
+                    alyaMessage.classList.remove("typing");
+
+                    alyaMessage.textContent =
+                        "Désolée 😅❤️ Je n'ai pas réussi à répondre.";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alyaMessage.classList.remove("typing");
+
+                alyaMessage.textContent =
+                    "Oups 😅❤️ Je n'arrive pas à contacter mon cerveau pour le moment. Vérifie que le serveur est bien disponible.";
+
+            }
+
+
+            // Descendre automatiquement
+
+            messages.scrollTop = messages.scrollHeight;
         }
 
-        alyaMessage.textContent = response;
 
-        messages.appendChild(alyaMessage);
+        // Envoyer avec la touche Entrée
 
-        messages.scrollTop = messages.scrollHeight;
+        input.addEventListener("keydown", function(event) {
 
-    }, 800);
+            if (event.key === "Enter") {
 
-}
+                event.preventDefault();
 
+                sendMessage();
 
-// Envoyer avec la touche Entrée
-document.getElementById("messageInput")
-.addEventListener("keydown", function(event) {
+            }
 
-    if (event.key === "Enter") {
-        sendMessage();
-    }
+        });
 
-});
-
-</script>
+    </script>
 
 </body>
+
 </html>
